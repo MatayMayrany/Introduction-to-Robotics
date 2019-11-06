@@ -7,26 +7,16 @@ import math
 """
 
 def scara_IK(point):
-    x = point[0]
+    x = point[0] - 0.07
     y = point[1]
     z = point[2]
     q = [0.0, 0.0, 0.0]
-
-    q3 = z
-
     arm1 = 0.3
     arm2 = 0.35
-    r = math.sqrt(y**2 + (x-0.07)**2)
-
-    temp_angle_1 = math.acos(((arm1**2) + (arm2**2) - (r**2))/(2*arm1*arm2))
-
-    q2 = math.pi - temp_angle_1
-
-    temp_value_1 = arm2*math.cos(q2)+arm1
-    temp_value_2 = arm2*math.sin(q2)
-
-    [a, b] = [y*(temp_value_1) - x*(temp_value_2), (x-0.07)*(temp_value_1) + y*(temp_value_2)]
-    q1 = math.atan2(a,b)
+    temp_value = ((x)**2 + y**2 - (arm1**2 + arm2**2)) / (2 * arm1 * arm2)
+    q1 = math.atan2(y, x) - math.atan2(arm2 * math.sqrt(1 - temp_value**2), arm1 + arm2 * temp_value)
+    q2 = math.acos(temp_value)
+    q3 = z
     q = [q1, q2, q3]
 
     return q
